@@ -49,3 +49,25 @@ export async function updateUser(req: Request, res: Response) {
     }
   }
 }
+
+export async function deleteUser(req: Request, res: Response) {
+  try {
+    /*     const { firstName, lastName } = req.body; */
+    const { id } = req.params;
+    const user = await User.findOneBy({ id: parseInt(req.params.id) });
+    if (!user) {
+      return res
+        .status(404)
+        .json({ message: `No user with id: ${req.params.id}` });
+    }
+    /* user.firstName = firstName;
+    user.lastName = lastName;
+    user.save(); */
+    await User.delete({ id: parseInt(id) });
+    return res.status(204).json({ message: "deleted" });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res.status(500).json({ message: error.message });
+    }
+  }
+}
